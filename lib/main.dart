@@ -1,8 +1,11 @@
-import 'dart:collection';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:instagram_clone_riverpod/state/auth/backend/authenticator.dart';
-import 'package:instagram_clone_riverpod/state/auth/provider/authStateProvider.dart';
+//import 'package:instagram_clone_riverpod/state/auth/backend/authenticator.dart';
+//import 'package:instagram_clone_riverpod/state/auth/provider/authStateProvider.dart';
 import 'package:instagram_clone_riverpod/state/auth/provider/is_logged_in_provider.dart';
+import 'package:instagram_clone_riverpod/state/providers/is_loading_provider.dart';
+import 'package:instagram_clone_riverpod/views/components/loading/loading_screen.dart';
+import 'package:instagram_clone_riverpod/views/components/login/login_view.dart';
+import 'package:instagram_clone_riverpod/views/main/main_view.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -39,11 +42,22 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.dark,
       home: Consumer(
         builder: (context, ref, child) {
+          //take care of displaplaying the loading screen
+          ref.listen(isLoadingProvider, (_, isLoading) {
+            if (isLoading) {
+              LoadingScreen.instance().show(
+                context: context,
+              );
+            } else {
+              LoadingScreen.instance().hide();
+            }
+          });
+
           final isLoggedIn = ref.watch(isLoggedInProvider);
           if (isLoggedIn) {
             return const MainView();
           } else {
-            return const LogInView();
+            return const LoginView();
           }
         },
       ),
@@ -52,60 +66,61 @@ class MyApp extends StatelessWidget {
 }
 
 //for when you are log in
-class MainView extends ConsumerWidget {
-  const MainView({super.key});
+// class MainView extends ConsumerWidget {
+//   const MainView({super.key});
 
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text('instagram'),
-        ),
-        body: Container(
-            child: TextButton(
-                onPressed: () async {
-                  await ref.read(authStateProvider.notifier).logOut();
-                },
-                child: const Text('LogOut'))));
-  }
-}
+//   @override
+//   Widget build(BuildContext context, WidgetRef ref) {
+//     return Scaffold(
+//         appBar: AppBar(
+//           title: const Text('instagram'),
+//         ),
+//         // ignore: avoid_unnecessary_containers
+//         body: Container(
+//             child: TextButton(
+//                 onPressed: () async {
+//                   await ref.read(authStateProvider.notifier).logOut();
+//                 },
+//                 child: const Text('LogOut'))));
+//   }
+// }
 
 //when you are not logged in
-class LogInView extends StatelessWidget {
-  const LogInView({
-    Key? key,
-  }) : super(key: key);
+// class LogInView extends StatelessWidget {
+//   const LogInView({
+//     Key? key,
+//   }) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login View'),
-      ),
-      body: Consumer(
-        builder: (BuildContext context, WidgetRef ref, Widget? child) {
-          return Column(
-            children: [
-              TextButton(
-                  onPressed: () async {
-                    await ref
-                        .read(authStateProvider.notifier)
-                        .loginWithGoogle();
-                    //final result = await Authenticator().loginWithGoogle();
-                    //  result.log();
-                  },
-                  child: const Text('Sign in WIth Google')),
-              TextButton(
-                  onPressed: () async {
-                    ref.read(authStateProvider.notifier).loginWithFacebook();
-                    // final result = await Authenticator().loginWithFacebook();
-                    // result.log();
-                  },
-                  child: const Text('Sign in WIth Facebook'))
-            ],
-          );
-        },
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text('Login View'),
+//       ),
+//       body: Consumer(
+//         builder: (BuildContext context, WidgetRef ref, Widget? child) {
+//           return Column(
+//             children: [
+//               TextButton(
+//                   onPressed: () async {
+//                     await ref
+//                         .read(authStateProvider.notifier)
+//                         .loginWithGoogle();
+//                     //final result = await Authenticator().loginWithGoogle();
+//                     //  result.log();
+//                   },
+//                   child: const Text('Sign in WIth Google')),
+//               TextButton(
+//                   onPressed: () async {
+//                     ref.read(authStateProvider.notifier).loginWithFacebook();
+//                     // final result = await Authenticator().loginWithFacebook();
+//                     // result.log();
+//                   },
+//                   child: const Text('Sign in WIth Facebook'))
+//             ],
+//           );
+//         },
+//       ),
+//     );
+//   }
+// }

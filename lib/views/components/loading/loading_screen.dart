@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram_clone_riverpod/views/components/constants/strings.dart';
 import 'package:instagram_clone_riverpod/views/components/loading/loading_screen_controller.dart';
