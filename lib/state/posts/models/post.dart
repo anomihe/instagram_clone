@@ -14,7 +14,7 @@ class Post {
   final String fileUrl;
   final FileType fileType;
   final String fileName;
-  final String aspectRatio;
+  final double aspectRatio;
   final String thumbnailStorageId;
   final String originalFIleStorageId;
   final Map<PostSetting, bool> postSettings;
